@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: VerySecretPassword
+      POSTGRES_USER: laravel
+    ports:
+        - '5432:5432'
+    volumes:
+       - ./docker/db/data:/var/lib/postgresql/data:rw
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+
+volumes:
+  db-data:
