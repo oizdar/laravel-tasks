@@ -8,3 +8,6 @@
 
 * create admin user: `php artisan orchid:admin`
 
+* create passport ID Keys: `php artisan passport:keys`
+
+* generate swagger docs from annotations: `./artisan l5-swagger:generate`
