@@ -17,7 +17,7 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
-            'title' => fake()->title(),
+            'title' => fake()->text(100),
             'description' => fake()->optional()->text(1000),
             'due_date' => fake()->optional()->dateTimeInInterval('now', '+1 year'),
             'completed' => fake()->boolean()

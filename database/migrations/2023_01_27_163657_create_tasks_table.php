@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title', 100);
             $table->string('description', 1000)->nullable();
-            $table->dateTimeTz('due_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->boolean('completed');
         });
     }

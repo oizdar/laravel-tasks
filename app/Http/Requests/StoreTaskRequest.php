@@ -12,7 +12,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Xml(name="StoreTask"),
  *     @OA\Property(property="title", type="string",  example="Example task title"),
  *     @OA\Property(property="description", type="text",  example="Example task description", nullable=true),
- *     @OA\Property(property="due_date", type="string", format="date-time", example="2023-02-25 12:59:20"),
+ *     @OA\Property(property="due_date", type="string", format="date", example="2019-02-25"),
  * )
  */
 class StoreTaskRequest extends FormRequest
