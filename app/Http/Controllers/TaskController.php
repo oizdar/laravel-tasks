@@ -2,15 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Tag (
+ *     name="Tasks",
+ *     description="Everything about your Tasks",
+ * )
+ */
 class TaskController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     *  @OA\Get(
+     *      path="/tasks",
+     *      operationId="index",
+     *      tags={"Tasks"},
+     *      summary="Display a listing of the resource.",
+     *      @OA\Response(
+     *          response="200",
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="array",
+     *                  @OA\Items(ref="#/components/schemas/Task")
+     *              ),
+     *              @OA\Property(property="links", type="object", ref="#/components/schemas/Links"),
+     *              @OA\Property(property="meta", type="object", example="{}"),
+     *          )
+     *      )
+     *  )
      *
      * @return AnonymousResourceCollection
      */
@@ -20,18 +45,28 @@ class TaskController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     *  @OA\Post(
+     *      path="/tasks",
+     *      operationId="store",
+     *      tags={"Tasks"},
+     *      summary="Store a newly created resource in storage.",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/StoreTaskRequest")
+     *      ),
+     *      @OA\Response(
+     *          response="201",
+     *          description="successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/Task")
+     *      )
+     *  )
+     *
      *
      * @param Request $request
-     * @return TaskResource
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $request->validate([
-            'title' => 'required|min:3|max:100',
-            'description' => 'max:1000',
-            'dueDate' => 'nullable|date|after_or_equal:today'
-        ]);
 
         $task = new Task([
             'title' => $request->title,
@@ -40,7 +75,7 @@ class TaskController extends Controller
         ]);
         $task->save();
 
-        return new TaskResource($task);
+        return (new TaskResource($task))->response()->setStatusCode(201);
     }
 
     /**
