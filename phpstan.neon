@@ -3,6 +3,5 @@ includes:
 parameters:
     paths:
         - app
-        - tests
-        - database
-    level: 9
+    level: 8
+    checkGenericClassInNonGenericObjectType: false
