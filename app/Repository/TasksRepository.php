@@ -4,9 +4,8 @@ namespace App\Repository;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Jobs\ProcessMailOnTaskCompleted;
 use App\Models\Task;
-use App\Models\User;
-use App\Notifications\TaskReminder;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TasksRepository
@@ -14,6 +13,8 @@ class TasksRepository
     public function storeTask(StoreTaskRequest $taskRequest): Task
     {
         $task = new Task($taskRequest->validated());
+        $task->user_id = auth()->user()->id ?? 1;
+
         $task->save();
 
         return $task;
@@ -31,6 +32,11 @@ class TasksRepository
         }
 
         $task->fill($taskRequest->validated())->save();
+
+        if($task->completed) {
+            ProcessMailOnTaskCompleted::dispatch($task);
+        }
+
         return $task;
     }
 
@@ -48,15 +54,12 @@ class TasksRepository
         $task->delete();
     }
 
-    public function sendTaskNotifications()
+    public function getTaskForReminding()
     {
-        $tasks = Task::where('due_date', '<=', new \DateTime('tommorow'))
-            ->where('completed', false);
+        $tasks = Task::where('due_date', '<=', new \DateTime('+2 months'))
+            ->where('completed', false)
+            ->where('reminded', false);
 
-        foreach($tasks as $task) {
-            if($task->due_date <= today()->setTimezone($task->user->timezone ?? 'utc')) {
-                $task->user->notify(new TaskReminder($task))->locale($task->user->locale);
-            }
-        }
+        return $tasks;
     }
 }

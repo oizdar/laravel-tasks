@@ -46,6 +46,7 @@ class TaskCompleted extends Notification implements ShouldQueue
                     ->line(__('notification.task_completed_line', ['title' => $this->task->title]));
     }
 
+
     /**
      * Get the array representation of the notification.
      *

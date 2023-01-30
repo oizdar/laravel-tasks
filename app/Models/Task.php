@@ -37,6 +37,7 @@ class Task extends Model
         'description' => null,
         'due_date' => null,
         'completed' => false,
+        'reminded' => false,
     ];
 
     public function user()

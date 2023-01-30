@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessTaskReminder;
 use App\Repository\TasksRepository;
 use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
@@ -28,7 +29,11 @@ class NotificationsController extends Controller
      */
     public function sendNotifications()
     {
-        $this->taskRepository->sendTaskNotifications();
-        return response();
+        $tasks = $this->taskRepository->getTaskForReminding();
+        foreach($tasks as $task) {
+            ProcessTaskReminder::dispatch($task);
+        }
+
+        return response()->noContent();
     }
 }

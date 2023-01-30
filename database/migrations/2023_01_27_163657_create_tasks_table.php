@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description', 1000)->nullable();
             $table->date('due_date')->nullable();
             $table->boolean('completed');
+            $table->boolean('reminded');
             $table->foreignIdFor(User::class)
                 ->constrained()
                 ->cascadeOnDelete();
