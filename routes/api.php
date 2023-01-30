@@ -21,8 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('tasks', TaskController::class);
+Route::apiResource('tasks', TaskController::class)
+    ->middleware('auth:api');
 
-Route::post('/send-notifications/tasks', [NotificationsController::class, 'sendNotifications']);
-
-
+Route::post('/send-notifications/tasks', [NotificationsController::class, 'sendNotifications'])
+    ->middleware('auth:api');
