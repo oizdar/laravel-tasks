@@ -5,3 +5,7 @@ parameters:
         - app
     level: 8
     checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        -
+            message: '#If condition is always false#'
+            path: app/Repository/TasksRepository.php

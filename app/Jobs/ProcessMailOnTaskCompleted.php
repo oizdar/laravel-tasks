@@ -13,7 +13,7 @@ class ProcessMailOnTaskCompleted implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3;
+    public int $tries = 3;
 
     /**
      * Create a new job instance.

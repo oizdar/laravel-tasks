@@ -29,7 +29,7 @@ class NotificationsController extends Controller
      */
     public function sendNotifications()
     {
-        $tasks = $this->taskRepository->getTaskForReminding();
+        $tasks = $this->taskRepository->getTasksForReminding();
         foreach($tasks as $task) {
             ProcessTaskReminder::dispatch($task);
         }

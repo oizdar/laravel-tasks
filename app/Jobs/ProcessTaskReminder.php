@@ -13,7 +13,7 @@ class ProcessTaskReminder implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3;
+    public int $tries = 3;
 
     /**
      * Create a new job instance.
@@ -32,8 +32,7 @@ class ProcessTaskReminder implements ShouldQueue
      */
     public function handle()
     {
-        $this->task->user->notify(new \App\Notifications\TaskReminder($this->task))
-            ->locale($this->task->user->locale);
+        $this->task->user->notify(new \App\Notifications\TaskReminder($this->task));
 
         $this->task->reminded = true;
         $this->task->save();

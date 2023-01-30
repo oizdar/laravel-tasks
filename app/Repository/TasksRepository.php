@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\ProcessMailOnTaskCompleted;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TasksRepository
@@ -54,12 +55,15 @@ class TasksRepository
         $task->delete();
     }
 
-    public function getTaskForReminding()
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasksForReminding()
     {
         $tasks = Task::where('due_date', '<=', new \DateTime('+2 months'))
             ->where('completed', false)
             ->where('reminded', false);
 
-        return $tasks;
+        return $tasks->get();
     }
 }
