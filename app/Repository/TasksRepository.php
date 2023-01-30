@@ -5,9 +5,11 @@ namespace App\Repository;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\TaskReminder;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class TaskRepository
+class TasksRepository
 {
     public function storeTask(StoreTaskRequest $taskRequest): Task
     {
@@ -44,5 +46,17 @@ class TaskRepository
         }
 
         $task->delete();
+    }
+
+    public function sendTaskNotifications()
+    {
+        $tasks = Task::where('due_date', '<=', new \DateTime('tommorow'))
+            ->where('completed', false);
+
+        foreach($tasks as $task) {
+            if($task->due_date <= today()->setTimezone($task->user->timezone ?? 'utc')) {
+                $task->user->notify(new TaskReminder($task))->locale($task->user->locale);
+            }
+        }
     }
 }

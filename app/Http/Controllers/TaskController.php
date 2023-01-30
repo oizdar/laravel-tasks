@@ -6,7 +6,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
-use App\Repository\TaskRepository;
+use App\Repository\TasksRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -21,7 +21,7 @@ use OpenApi\Annotations as OA;
 class TaskController extends Controller
 {
 
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private readonly TasksRepository $taskRepository)
     {
     }
 
