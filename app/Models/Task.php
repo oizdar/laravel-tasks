@@ -30,6 +30,9 @@ class Task extends Model
         'completed'
     ];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected $attributes = [
         'description' => null,
         'due_date' => null,

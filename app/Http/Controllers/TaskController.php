@@ -7,8 +7,9 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repository\TaskRepository;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
 
 /**
@@ -70,8 +71,7 @@ class TaskController extends Controller
      *  )
      *
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(StoreTaskRequest $request)
     {
@@ -104,13 +104,9 @@ class TaskController extends Controller
      *      )
      *  )
      *
-     * @param int $id
      * @return TaskResource
-     *
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         return new TaskResource(Task::findOrFail($id));
     }
@@ -185,7 +181,7 @@ class TaskController extends Controller
      *  )
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(int $id)
     {
