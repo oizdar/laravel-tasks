@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetTasksRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repository\TasksRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
 
@@ -26,11 +27,49 @@ class TaskController extends Controller
     }
 
     /**
-     *  @OA\Get(
+     * @OA\Get(
      *      path="/tasks",
      *      operationId="index",
      *      tags={"Tasks"},
      *      summary="Display a listing of the resource.",
+     *      security={{"passport": {}}},
+     *      @OA\Parameter(
+     *          description="Filter by completed flag",
+     *          in="query",
+     *          name="completed",
+     *          example="false",
+     *          @OA\Schema(type="boolean")
+     *      ),
+     *     @OA\Parameter(
+     *          description="Filter by due_date",
+     *          in="query",
+     *          name="due_date[from]",
+     *          @OA\Schema(type="string", example="2023-05-05")
+     *      ),
+     *     @OA\Parameter(
+     *          description="Filter by due_date",
+     *          in="query",
+     *          name="due_date[to]",
+     *          @OA\Schema(type="string", example="2023-05-05")
+     *      ),
+     *      @OA\Parameter(
+     *          description="Filter by due_date",
+     *          in="query",
+     *          name="order_by[completed]",
+     *          @OA\Schema(type="enum", enum={"asc","desc"})
+     *      ),
+     *     @OA\Parameter(
+     *          description="Filter by due_date",
+     *          in="query",
+     *          name="order_by[due_date]",
+     *          @OA\Schema(type="enum", enum={"asc","desc"})
+     *      ),
+     *     @OA\Parameter(
+     *          description="Filter by due_date",
+     *          in="query",
+     *          name="order_by[activities]",
+     *          @OA\Schema(type="enum", enum={"asc","desc"})
+     *      ),
      *      @OA\Response(
      *          response="200",
      *          description="successful operation",
@@ -41,22 +80,32 @@ class TaskController extends Controller
      *              @OA\Property(property="links", type="object", ref="#/components/schemas/Links"),
      *              @OA\Property(property="meta", type="object", example="{}"),
      *          )
+     *      ),
+     *      @OA\Response(
+     *          response="400",
+     *          description="Bad request. Validation or bussiness logic error.",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string"),
+     *              @OA\Property(property="data", type="array", items={}),
+     *          )
      *      )
      *  )
      *
-     * @return AnonymousResourceCollection
+     * @param GetTasksRequest $request
+     * @return TaskCollection
      */
-    public function index()
+    public function index(GetTasksRequest $request)
     {
-        return TaskResource::collection(Task::query()->paginate(25));
+        return new TaskCollection(Task::filter($request->validated())->sort($request->validated())->paginate(25));
     }
 
     /**
      *  @OA\Post(
-     *      path="/tasks",
+     *      path="/tasks{?completed*}",
      *      operationId="store",
      *      tags={"Tasks"},
      *      summary="Store a newly created resource in storage.",
+     *      security={{"passport": {}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreTaskRequest")
@@ -66,6 +115,14 @@ class TaskController extends Controller
      *          description="successful operation",
      *          @OA\JsonContent(
      *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="400",
+     *          description="Bad request. Validation or bussiness logic error.",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string"),
+     *              @OA\Property(property="data", type="array", items={}),
      *          )
      *      )
      *  )
@@ -86,6 +143,7 @@ class TaskController extends Controller
      *      operationId="show",
      *      tags={"Tasks"},
      *      summary="Display the specified resource.",
+     *      security={{"passport": {}}},
      *      @OA\Parameter(
      *          description="Task ID",
      *          in="path",
@@ -100,6 +158,14 @@ class TaskController extends Controller
      *          description="successful operation",
      *          @OA\JsonContent(
      *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="400",
+     *          description="Bad request. Validation or bussiness logic error.",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string"),
+     *              @OA\Property(property="data", type="array", items={}),
      *          )
      *      )
      *  )
@@ -117,6 +183,7 @@ class TaskController extends Controller
      *      operationId="update",
      *      tags={"Tasks"},
      *      summary="Update the specified resource in storage.",
+     *      security={{"passport": {}}},
      *      @OA\Parameter(
      *          description="Task ID",
      *          in="path",
@@ -135,6 +202,14 @@ class TaskController extends Controller
      *          description="successful operation",
      *          @OA\JsonContent(
      *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="400",
+     *          description="Bad request. Validation or bussiness logic error.",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string"),
+     *              @OA\Property(property="data", type="array", items={}),
      *          )
      *      )
      *  )
@@ -159,6 +234,7 @@ class TaskController extends Controller
      *      operationId="destroy",
      *      tags={"Tasks"},
      *      summary="Remove the specified resource from storage.",
+     *      security={{"passport": {}}},
      *      @OA\Parameter(
      *          description="Task ID",
      *          in="path",

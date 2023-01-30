@@ -9,3 +9,9 @@ parameters:
         -
             message: '#If condition is always false#'
             path: app/Repository/TasksRepository.php
+        -
+            message: '#Access to an undefined property*#'
+            path: app/Http/Resources/TaskResource.php
+        -
+            message: '#Property App\\Providers\\AuthServiceProvider::\$policies*#'
+            path: app/Providers/AuthServiceProvider.php

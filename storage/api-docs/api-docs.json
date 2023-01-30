@@ -14,6 +14,20 @@
         }
     ],
     "paths": {
+        "/send-notifications/tasks": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Prepare and sends all notifications",
+                "operationId": "send-task-notifications",
+                "responses": {
+                    "204": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/tasks": {
             "get": {
                 "tags": [
@@ -21,6 +35,71 @@
                 ],
                 "summary": "Display a listing of the resource.",
                 "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "completed",
+                        "in": "query",
+                        "description": "Filter by completed flag",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "example": "false"
+                    },
+                    {
+                        "name": "due_date[from]",
+                        "in": "query",
+                        "description": "Filter by due_date",
+                        "schema": {
+                            "type": "string",
+                            "example": "2023-05-05"
+                        }
+                    },
+                    {
+                        "name": "due_date[to]",
+                        "in": "query",
+                        "description": "Filter by due_date",
+                        "schema": {
+                            "type": "string",
+                            "example": "2023-05-05"
+                        }
+                    },
+                    {
+                        "name": "order_by[completed]",
+                        "in": "query",
+                        "description": "Filter by due_date",
+                        "schema": {
+                            "type": "enum",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order_by[due_date]",
+                        "in": "query",
+                        "description": "Filter by due_date",
+                        "schema": {
+                            "type": "enum",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order_by[activities]",
+                        "in": "query",
+                        "description": "Filter by due_date",
+                        "schema": {
+                            "type": "enum",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -46,9 +125,35 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request. Validation or bussiness logic error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
-            },
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/tasks{?completed*}": {
             "post": {
                 "tags": [
                     "Tasks"
@@ -80,8 +185,32 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request. Validation or bussiness logic error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/tasks/{taskId}": {
@@ -117,8 +246,32 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request. Validation or bussiness logic error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -160,7 +313,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -204,8 +362,32 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad request. Validation or bussiness logic error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         }
     },
@@ -344,6 +526,22 @@
                 "type": "object",
                 "xml": {
                     "name": "Task"
+                }
+            }
+        },
+        "securitySchemes": {
+            "passport": {
+                "type": "oauth2",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://127.0.0.1:8000/oauth/authorize",
+                        "tokenUrl": "http://127.0.0.1:8000/oauth/token",
+                        "refreshUrl": "http://127.0.0.1:8000/token/refresh",
+                        "scopes": []
+                    }
                 }
             }
         }

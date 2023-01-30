@@ -31,6 +31,6 @@ class ProcessMailOnTaskCompleted implements ShouldQueue
      */
     public function handle()
     {
-        $this->task->user->notify(new \App\Notifications\TaskCompleted($this->task));
+        $this->task->user()->first()->notify(new \App\Notifications\TaskCompleted($this->task));
     }
 }

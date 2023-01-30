@@ -25,4 +25,13 @@ class TaskFactory extends Factory
             'user_id' => User::all('id')->random()->id ?? null,
         ];
     }
+
+    public function notCompleted(): TaskFactory
+    {
+        return $this->state(fn (array $attributes) => [
+            'completed' => false
+        ]);
+    }
+
+
 }

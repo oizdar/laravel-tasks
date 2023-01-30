@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\ProcessMailOnTaskCompleted;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -14,7 +15,9 @@ class TasksRepository
     public function storeTask(StoreTaskRequest $taskRequest): Task
     {
         $task = new Task($taskRequest->validated());
-        $task->user_id = auth()->user()->id;
+        /** @var User $user */
+        $user = auth()->user();
+        $task->user_id = $user->id;
 
         $task->save();
 
