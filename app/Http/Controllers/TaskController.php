@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Repository\TaskRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Annotations as OA;
@@ -17,6 +19,10 @@ use OpenApi\Annotations as OA;
  */
 class TaskController extends Controller
 {
+
+    public function __construct(private readonly TaskRepository $taskRepository)
+    {
+    }
 
     /**
      *  @OA\Get(
@@ -57,7 +63,9 @@ class TaskController extends Controller
      *      @OA\Response(
      *          response="201",
      *          description="successful operation",
-     *          @OA\JsonContent(ref="#/components/schemas/Task")
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
      *      )
      *  )
      *
@@ -67,48 +75,121 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-
-        $task = new Task([
-            'title' => $request->title,
-            'description' => $request->description,
-            'due_date' => $request->dueDate,
-        ]);
-        $task->save();
+        $task = $this->taskRepository->storeTask($request);
 
         return (new TaskResource($task))->response()->setStatusCode(201);
     }
 
     /**
-     * Display the specified resource.
+     *  @OA\Get(
+     *      path="/tasks/{taskId}",
+     *      operationId="show",
+     *      tags={"Tasks"},
+     *      summary="Display the specified resource.",
+     *      @OA\Parameter(
+     *          description="Task ID",
+     *          in="path",
+     *          name="taskId",
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
+     *      )
+     *  )
      *
-     * @param  int  $id
+     * @param int $id
+     * @return TaskResource
+     *
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        return new TaskResource(Task::findOrFail($id));
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Patch(
+     *      path="/tasks/{taskId}",
+     *      operationId="update",
+     *      tags={"Tasks"},
+     *      summary="Update the specified resource in storage.",
+     *      @OA\Parameter(
+     *          description="Task ID",
+     *          in="path",
+     *          name="taskId",
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/UpdateTaskRequest")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *          )
+     *      )
+     *  )
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *
+     *
+     *
+     * @param UpdateTaskRequest $request
+     * @param int $id
+     * @return TaskResource
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTaskRequest $request, int $id)
     {
-        //
+        $task = $this->taskRepository->updateTask($request, $id);
+
+        return new TaskResource($task);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *      path="/tasks/{taskId}",
+     *      operationId="destroy",
+     *      tags={"Tasks"},
+     *      summary="Remove the specified resource from storage.",
+     *      @OA\Parameter(
+     *          description="Task ID",
+     *          in="path",
+     *          name="taskId",
+     *          example="1",
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response="204",
+     *          description="successful operation",
+     *      ),
+     *      @OA\Response(
+     *          response="400",
+     *          description="Bad request. Validation or bussiness logic error.",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string"),
+     *              @OA\Property(property="data", type="array", items={}),
+     *          )
+     *      )
+     *  )
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        $this->taskRepository->deleteTask($id);
+        return response()->noContent();
     }
 }

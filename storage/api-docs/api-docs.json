@@ -71,7 +71,136 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Task"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{taskId}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Display the specified resource.",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Remove the specified resource from storage.",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request. Validation or bussiness logic error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Update the specified resource in storage.",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -95,13 +224,39 @@
                     },
                     "due_date": {
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-02-25 12:59:20"
+                        "format": "date",
+                        "example": "2025-02-25"
                     }
                 },
                 "type": "object",
                 "xml": {
                     "name": "StoreTask"
+                }
+            },
+            "UpdateTaskRequest": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Example task title"
+                    },
+                    "description": {
+                        "type": "text",
+                        "example": "Example task description",
+                        "nullable": true
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-02-25"
+                    },
+                    "completed": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UpdateTask"
                 }
             },
             "Links": {
@@ -169,8 +324,8 @@
                     },
                     "due_date": {
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2019-02-25 12:59:20"
+                        "format": "date",
+                        "example": "2019-02-25"
                     },
                     "completed": {
                         "type": "boolean",

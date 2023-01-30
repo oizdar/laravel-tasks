@@ -9,13 +9,14 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     @OA\Xml(name="StoreTask"),
+ *     @OA\Xml(name="UpdateTask"),
  *     @OA\Property(property="title", type="string",  example="Example task title"),
  *     @OA\Property(property="description", type="text",  example="Example task description", nullable=true),
  *     @OA\Property(property="due_date", type="string", format="date", example="2025-02-25"),
+ *     @OA\Property(property="completed", type="boolean", example=true),
  * )
  */
-class StoreTaskRequest extends FormRequest
+class UpdateTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,9 +36,10 @@ class StoreTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:3|max:100',
+            'title' => 'min:3|max:100',
             'description' => 'max:1000',
-            'due_date' => 'date|after_or_equal:today'
+            'due_date' => 'date|after_or_equal:today',
+            'completed' => 'bool'
         ];
     }
 
