@@ -24,6 +24,6 @@ class DatabaseSeeder extends Seeder
              'password' => Hash::make('TestUserPassword')
          ]);
 
-         Task::factory(10)->create();
+         Task::factory(100)->create();
     }
 }

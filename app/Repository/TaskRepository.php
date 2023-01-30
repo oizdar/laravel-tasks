@@ -11,8 +11,8 @@ class TaskRepository
 {
     public function storeTask(StoreTaskRequest $taskRequest): Task
     {
-        $task = new Task();
-        $task->create($taskRequest->validated());
+        $task = new Task($taskRequest->validated());
+        $task->save();
 
         return $task;
     }

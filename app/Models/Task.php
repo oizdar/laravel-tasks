@@ -31,6 +31,8 @@ class Task extends Model
     ];
 
     protected $attributes = [
-        'completed' => false
+        'description' => null,
+        'due_date' => null,
+        'completed' => false,
     ];
 }
