@@ -21,8 +21,18 @@ class DatabaseSeeder extends Seeder
          \App\Models\User::factory()->create([
              'name' => 'Test User',
              'email' => 'test@example.com',
-             'password' => Hash::make('TestUserPassword')
+             'password' => Hash::make(env('TEST_USER_PASSWORD'))
          ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User2',
+            'email' => 'test2@example.com',
+            'password' => Hash::make(env('TEST_USER_PASSWORD'))
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User3',
+            'email' => 'test3@example.com',
+            'password' => Hash::make(env('TEST_USER_PASSWORD'))
+        ]);
 
          Task::factory(100)->create();
     }
