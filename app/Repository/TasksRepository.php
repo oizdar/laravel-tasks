@@ -14,9 +14,14 @@ class TasksRepository
     public function storeTask(StoreTaskRequest $taskRequest): Task
     {
         $task = new Task($taskRequest->validated());
-        $task->user_id = auth()->user()->id ?? 1;
+        $task->user_id = auth()->user()->id;
 
         $task->save();
+
+        activity('Task created')
+            ->performedOn($task)
+            ->causedBy(auth()->user())
+            ->withProperties($taskRequest->validated());
 
         return $task;
     }
