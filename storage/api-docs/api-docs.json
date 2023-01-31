@@ -110,7 +110,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Task"
+                                                "$ref": "#/components/schemas/TaskResourceForCollection"
                                             }
                                         },
                                         "links": {
@@ -237,7 +237,7 @@
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/Task"
+                                            "$ref": "#/components/schemas/TaskResource"
                                         }
                                     },
                                     "type": "object"
@@ -461,6 +461,66 @@
                 "type": "object",
                 "xml": {
                     "name": "Links"
+                }
+            },
+            "TaskResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Example task title"
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2019-02-25"
+                    },
+                    "completed": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "activities": {
+                        "type": "integer",
+                        "example": 9
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TaskResource"
+                }
+            },
+            "TaskResourceForCollection": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Example task title"
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2019-02-25"
+                    },
+                    "completed": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "activities": {
+                        "type": "integer",
+                        "example": 9
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TaskResourceForCollection"
                 }
             },
             "BaseModel": {

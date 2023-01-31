@@ -11,7 +11,9 @@ parameters:
             path: app/Repository/TasksRepository.php
         -
             message: '#Access to an undefined property*#'
-            path: app/Http/Resources/TaskResource.php
+            paths:
+                - app/Http/Resources/TaskResource.php
+                - app/Http/Resources/TaskResourceForCollection.php
         -
             message: '#Property App\\Providers\\AuthServiceProvider::\$policies*#'
             path: app/Providers/AuthServiceProvider.php

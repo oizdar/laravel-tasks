@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetTasksRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\TaskResourceForCollection;
 use App\Models\Task;
 use App\Repository\TasksRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
 
@@ -75,7 +76,7 @@ class TaskController extends Controller
      *          description="successful operation",
      *          @OA\JsonContent(
      *              @OA\Property(property="data", type="array",
-     *                  @OA\Items(ref="#/components/schemas/Task")
+     *                  @OA\Items(ref="#/components/schemas/TaskResourceForCollection")
      *              ),
      *              @OA\Property(property="links", type="object", ref="#/components/schemas/Links"),
      *              @OA\Property(property="meta", type="object", example="{}"),
@@ -92,11 +93,11 @@ class TaskController extends Controller
      *  )
      *
      * @param GetTasksRequest $request
-     * @return TaskCollection
+     * @return AnonymousResourceCollection
      */
     public function index(GetTasksRequest $request)
     {
-        return new TaskCollection(Task::filter($request->validated())
+        return TaskResourceForCollection::collection(Task::filter($request->validated())
             ->sort($request->validated())
             ->paginate(25));
     }
@@ -159,7 +160,7 @@ class TaskController extends Controller
      *          response="200",
      *          description="successful operation",
      *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
+     *              @OA\Property(property="data", type="object",  ref="#/components/schemas/TaskResource")
      *          )
      *      ),
      *      @OA\Response(

@@ -11,7 +11,7 @@ use Spatie\Activitylog\Models\Activity;
 
 /**
  * @OA\Schema(
- *     @OA\Xml(name="TaskResource"),
+ *     @OA\Xml(name="TaskResourceForCollection"),
  *     @OA\Property(property="id", type="integer", readOnly="true", example="1"),
  *     @OA\Property(property="title", type="string",  example="Example task title"),
  *     @OA\Property(property="due_date", type="string", format="date", example="2019-02-25"),
@@ -19,7 +19,7 @@ use Spatie\Activitylog\Models\Activity;
  *     @OA\Property(property="activities", type="int", example=9),
  * )
  */
-class TaskResource extends JsonResource
+class TaskResourceForCollection extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -29,16 +29,12 @@ class TaskResource extends JsonResource
      */
     public function toArray($request)
     {
-        $activitiesCount = Activity::where('subject_type', '=', Task::class)
-            ->where('subject_id', '=', $this->id)
-            ->count();
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'due_date' => $this->due_date,
-            'completed' => $this->completed,
-            'activities' => $activitiesCount,
+            'completed' => $this->completed
         ];
     }
 }
