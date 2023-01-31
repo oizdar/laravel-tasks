@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
-* @OA\Schema(
-* @OA\Property(property="created_at", type="string", format="date-time", description="Initial creation timestamp", readOnly="true"),
-* @OA\Property(property="updated_at", type="string", format="date-time", description="Last update timestamp", readOnly="true"),
-* @OA\Property(property="deleted_at", type="string", format="date-time", description="Soft delete timestamp", readOnly="true"),
-* )
-*/
+#[OA\Schema(
+    required: ['title', 'completed'],
+    properties: [
+        new OA\Property(property: 'created_at', description: 'Initial creation timestamp', type: 'string', format: 'date-time', readOnly: true),
+        new OA\Property(property: 'updated_at', description: 'Last update timestamp', type: 'string', format: 'date-time', readOnly: true),
+        new OA\Property(property: 'deleted_at', description: 'Soft delete timestamp', type: 'string', format: 'date-time', readOnly: true),
+    ]
+)]
 abstract class BaseModel extends Model
 {
 }

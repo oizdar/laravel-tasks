@@ -42,8 +42,7 @@
                         "description": "Filter by completed flag",
                         "schema": {
                             "type": "boolean"
-                        },
-                        "example": "false"
+                        }
                     },
                     {
                         "name": "due_date[from]",
@@ -51,7 +50,7 @@
                         "description": "Filter by due_date",
                         "schema": {
                             "type": "string",
-                            "example": "2023-05-05"
+                            "example": "2023-02-01"
                         }
                     },
                     {
@@ -60,13 +59,13 @@
                         "description": "Filter by due_date",
                         "schema": {
                             "type": "string",
-                            "example": "2023-05-05"
+                            "example": "2025-02-01"
                         }
                     },
                     {
                         "name": "order_by[completed]",
                         "in": "query",
-                        "description": "Filter by due_date",
+                        "description": "Sort by completed",
                         "schema": {
                             "type": "enum",
                             "enum": [
@@ -78,7 +77,7 @@
                     {
                         "name": "order_by[due_date]",
                         "in": "query",
-                        "description": "Filter by due_date",
+                        "description": "Sort by due_date",
                         "schema": {
                             "type": "enum",
                             "enum": [
@@ -90,7 +89,7 @@
                     {
                         "name": "order_by[activities]",
                         "in": "query",
-                        "description": "Filter by due_date",
+                        "description": "Sort by activities",
                         "schema": {
                             "type": "enum",
                             "enum": [
@@ -114,7 +113,10 @@
                                             }
                                         },
                                         "links": {
-                                            "$ref": "#/components/schemas/Links"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Links"
+                                            }
                                         },
                                         "meta": {
                                             "type": "object",
@@ -137,7 +139,7 @@
                                         },
                                         "data": {
                                             "type": "array",
-                                            "items": []
+                                            "items": {}
                                         }
                                     },
                                     "type": "object"
@@ -145,12 +147,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -195,7 +192,7 @@
                                         },
                                         "data": {
                                             "type": "array",
-                                            "items": []
+                                            "items": {}
                                         }
                                     },
                                     "type": "object"
@@ -203,12 +200,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
+                }
             }
         },
         "/tasks/{taskId}": {
@@ -222,11 +214,11 @@
                     {
                         "name": "taskId",
                         "in": "path",
-                        "description": "Task ID",
+                        "description": "Task uniqal ID",
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": 1
                     }
                 ],
                 "responses": {
@@ -256,7 +248,7 @@
                                         },
                                         "data": {
                                             "type": "array",
-                                            "items": []
+                                            "items": {}
                                         }
                                     },
                                     "type": "object"
@@ -264,12 +256,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
+                }
             },
             "delete": {
                 "tags": [
@@ -285,7 +272,7 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": 1
                     }
                 ],
                 "responses": {
@@ -303,7 +290,7 @@
                                         },
                                         "data": {
                                             "type": "array",
-                                            "items": []
+                                            "items": {}
                                         }
                                     },
                                     "type": "object"
@@ -311,12 +298,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
+                }
             },
             "patch": {
                 "tags": [
@@ -332,7 +314,7 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": 1
                     }
                 ],
                 "requestBody": {
@@ -372,7 +354,7 @@
                                         },
                                         "data": {
                                             "type": "array",
-                                            "items": []
+                                            "items": {}
                                         }
                                     },
                                     "type": "object"
@@ -380,32 +362,31 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
+                }
             }
         }
     },
     "components": {
         "schemas": {
             "StoreTaskRequest": {
+                "required": [
+                    "title"
+                ],
                 "properties": {
                     "title": {
                         "type": "string",
                         "example": "Example task title"
                     },
                     "description": {
-                        "type": "text",
-                        "example": "Example task description",
+                        "type": "string",
+                        "example": "Example task title",
                         "nullable": true
                     },
                     "due_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-02-25"
+                        "example": "2025-02-25",
+                        "nullable": true
                     }
                 },
                 "type": "object",
@@ -414,29 +395,35 @@
                 }
             },
             "UpdateTaskRequest": {
+                "required": [
+                    "title",
+                    "completed"
+                ],
                 "properties": {
                     "title": {
                         "type": "string",
                         "example": "Example task title"
                     },
                     "description": {
-                        "type": "text",
-                        "example": "Example task description",
+                        "type": "string",
+                        "example": "Example task title",
                         "nullable": true
                     },
                     "due_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2025-02-25"
+                        "example": "2025-02-25",
+                        "nullable": true
                     },
                     "completed": {
                         "type": "boolean",
-                        "example": true
+                        "example": true,
+                        "nullable": false
                     }
                 },
                 "type": "object",
                 "xml": {
-                    "name": "UpdateTask"
+                    "name": "StoreTask"
                 }
             },
             "Links": {
@@ -451,7 +438,7 @@
                     },
                     "next": {
                         "type": "string",
-                        "example": "http://example.com/api/element?page=5"
+                        "format": "http://example.com/api/element?page=5"
                     },
                     "prev": {
                         "type": "string",
@@ -464,28 +451,41 @@
                 }
             },
             "TaskResource": {
+                "required": [
+                    "id",
+                    "title",
+                    "completed"
+                ],
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": "true",
-                        "example": "1"
+                        "readOnly": true,
+                        "example": 1
                     },
                     "title": {
                         "type": "string",
                         "example": "Example task title"
                     },
+                    "description": {
+                        "type": "string",
+                        "example": "Example task title",
+                        "nullable": true
+                    },
                     "due_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2019-02-25"
+                        "example": "2025-02-25",
+                        "nullable": true
                     },
                     "completed": {
                         "type": "boolean",
-                        "example": false
+                        "example": true,
+                        "nullable": false
                     },
                     "activities": {
                         "type": "integer",
-                        "example": 9
+                        "readOnly": true,
+                        "example": 1
                     }
                 },
                 "type": "object",
@@ -494,28 +494,36 @@
                 }
             },
             "TaskResourceForCollection": {
+                "required": [
+                    "id",
+                    "title",
+                    "completed"
+                ],
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": "true",
-                        "example": "1"
+                        "readOnly": true,
+                        "example": 1
                     },
                     "title": {
                         "type": "string",
                         "example": "Example task title"
                     },
+                    "description": {
+                        "type": "string",
+                        "example": "Example task title",
+                        "nullable": true
+                    },
                     "due_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2019-02-25"
+                        "example": "2025-02-25",
+                        "nullable": true
                     },
                     "completed": {
                         "type": "boolean",
-                        "example": false
-                    },
-                    "activities": {
-                        "type": "integer",
-                        "example": 9
+                        "example": true,
+                        "nullable": false
                     }
                 },
                 "type": "object",
@@ -524,52 +532,62 @@
                 }
             },
             "BaseModel": {
+                "required": [
+                    "title",
+                    "completed"
+                ],
                 "properties": {
                     "created_at": {
                         "description": "Initial creation timestamp",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true"
+                        "readOnly": true
                     },
                     "updated_at": {
                         "description": "Last update timestamp",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true"
+                        "readOnly": true
                     },
                     "deleted_at": {
                         "description": "Soft delete timestamp",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true"
+                        "readOnly": true
                     }
                 },
                 "type": "object"
             },
             "Task": {
+                "required": [
+                    "title",
+                    "completed"
+                ],
                 "properties": {
                     "id": {
-                        "type": "integer",
-                        "readOnly": "true",
-                        "example": "1"
+                        "type": "string",
+                        "readOnly": true,
+                        "example": 1
                     },
                     "title": {
                         "type": "string",
                         "example": "Example task title"
                     },
                     "description": {
-                        "type": "text",
+                        "type": "string",
                         "example": "Example task description",
                         "nullable": true
                     },
                     "due_date": {
                         "type": "string",
                         "format": "date",
-                        "example": "2019-02-25"
+                        "example": "2025-02-25",
+                        "nullable": true
                     },
                     "completed": {
                         "type": "boolean",
-                        "example": false
+                        "example": true,
+                        "nullable": false
                     },
                     "created_at": {
                         "$ref": "#/components/schemas/BaseModel/properties/created_at"

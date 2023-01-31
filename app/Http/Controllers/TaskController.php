@@ -12,14 +12,12 @@ use App\Repository\TasksRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\Tag (
- *     name="Tasks",
- *     description="Everything about your Tasks",
- * )
- */
+#[OA\Tag(
+    name: 'Tasks',
+    description: 'Everything about your Tasks',
+)]
 class TaskController extends Controller
 {
     public function __construct(private readonly TasksRepository $taskRepository)
@@ -27,73 +25,96 @@ class TaskController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *      path="/tasks",
-     *      operationId="index",
-     *      tags={"Tasks"},
-     *      summary="Display a listing of the resource.",
-     *      security={{"passport": {}}},
-     *      @OA\Parameter(
-     *          description="Filter by completed flag",
-     *          in="query",
-     *          name="completed",
-     *          example="false",
-     *          @OA\Schema(type="boolean")
-     *      ),
-     *     @OA\Parameter(
-     *          description="Filter by due_date",
-     *          in="query",
-     *          name="due_date[from]",
-     *          @OA\Schema(type="string", example="2023-05-05")
-     *      ),
-     *     @OA\Parameter(
-     *          description="Filter by due_date",
-     *          in="query",
-     *          name="due_date[to]",
-     *          @OA\Schema(type="string", example="2023-05-05")
-     *      ),
-     *      @OA\Parameter(
-     *          description="Filter by due_date",
-     *          in="query",
-     *          name="order_by[completed]",
-     *          @OA\Schema(type="enum", enum={"asc","desc"})
-     *      ),
-     *     @OA\Parameter(
-     *          description="Filter by due_date",
-     *          in="query",
-     *          name="order_by[due_date]",
-     *          @OA\Schema(type="enum", enum={"asc","desc"})
-     *      ),
-     *     @OA\Parameter(
-     *          description="Filter by due_date",
-     *          in="query",
-     *          name="order_by[activities]",
-     *          @OA\Schema(type="enum", enum={"asc","desc"})
-     *      ),
-     *      @OA\Response(
-     *          response="200",
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="array",
-     *                  @OA\Items(ref="#/components/schemas/TaskResourceForCollection")
-     *              ),
-     *              @OA\Property(property="links", type="object", ref="#/components/schemas/Links"),
-     *              @OA\Property(property="meta", type="object", example="{}"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="400",
-     *          description="Bad request. Validation or bussiness logic error.",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string"),
-     *              @OA\Property(property="data", type="array", items={}),
-     *          )
-     *      )
-     *  )
-     *
      * @param GetTasksRequest $request
      * @return AnonymousResourceCollection
      */
+    #[OA\Get(
+        path: '/tasks',
+        operationId: 'index',
+        summary: 'Display a listing of the resource.',
+        tags: ['Tasks'],
+//        security: [],
+        parameters: [
+            new OA\Parameter(
+                name: 'completed',
+                description: 'Filter by completed flag',
+                in: 'query',
+                schema: new OA\Schema(type: 'boolean')
+            ),
+            new OA\Parameter(
+                name: 'due_date[from]',
+                description: 'Filter by due_date',
+                in: 'query',
+                schema: new OA\Schema(type: 'string', example: '2023-02-01')
+            ),
+            new OA\Parameter(
+                name: 'due_date[to]',
+                description: 'Filter by due_date',
+                in: 'query',
+                schema: new OA\Schema(type: 'string', example: '2025-02-01')
+            ),
+            new OA\Parameter(
+                name: 'order_by[completed]',
+                description: 'Sort by completed',
+                in: 'query',
+                schema: new OA\Schema(type: 'enum', enum: ['asc', 'desc'])
+            ),
+            new OA\Parameter(
+                name: 'order_by[due_date]',
+                description: 'Sort by due_date',
+                in: 'query',
+                schema: new OA\Schema(type: 'enum', enum: ['asc', 'desc'])
+            ),
+            new OA\Parameter(
+                name: 'order_by[activities]',
+                description: 'Sort by activities',
+                in: 'query',
+                schema: new OA\Schema(type: 'enum', enum: ['asc', 'desc'])
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'successful operation',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/TaskResourceForCollection')
+                        ),
+                        new OA\Property(
+                            property: 'links',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/Links')
+                        ),
+                        new OA\Property(
+                            property: 'meta',
+                            type: 'object',
+                            example: '{}'
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: '400',
+                description: 'Bad request. Validation or bussiness logic error.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items()
+                        ),
+                    ]
+                )
+            )
+        ]
+    )]
     public function index(GetTasksRequest $request)
     {
         return TaskResourceForCollection::collection(Task::filter($request->validated())
@@ -102,36 +123,53 @@ class TaskController extends Controller
     }
 
     /**
-     *  @OA\Post(
-     *      path="/tasks",
-     *      operationId="store",
-     *      tags={"Tasks"},
-     *      summary="Store a newly created resource in storage.",
-     *      security={{"passport": {}}},
-     *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/StoreTaskRequest")
-     *      ),
-     *      @OA\Response(
-     *          response="201",
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="400",
-     *          description="Bad request. Validation or bussiness logic error.",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string"),
-     *              @OA\Property(property="data", type="array", items={}),
-     *          )
-     *      )
-     *  )
-     *
-     *
      * @return JsonResponse
      */
+    #[OA\Post(
+        path: '/tasks',
+        operationId: 'store',
+        summary: 'Store a newly created resource in storage.',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/StoreTaskRequest'
+            )
+        ),
+//        security: [],
+        tags: ['Tasks'],
+        responses: [
+            new OA\Response(
+                response: '201',
+                description: 'successful operation',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            ref: '#/components/schemas/Task',
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: '400',
+                description: 'Bad request. Validation or bussiness logic error.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items()
+                        ),
+                    ]
+                )
+            )
+        ]
+    )]
     public function store(StoreTaskRequest $request)
     {
         $task = $this->taskRepository->storeTask($request);
@@ -140,89 +178,120 @@ class TaskController extends Controller
     }
 
     /**
-     *  @OA\Get(
-     *      path="/tasks/{taskId}",
-     *      operationId="show",
-     *      tags={"Tasks"},
-     *      summary="Display the specified resource.",
-     *      security={{"passport": {}}},
-     *      @OA\Parameter(
-     *          description="Task ID",
-     *          in="path",
-     *          name="taskId",
-     *          example="1",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="200",
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object",  ref="#/components/schemas/TaskResource")
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="400",
-     *          description="Bad request. Validation or bussiness logic error.",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string"),
-     *              @OA\Property(property="data", type="array", items={}),
-     *          )
-     *      )
-     *  )
-     *
      * @return TaskResource
      */
+    #[OA\Get(
+        path: '/tasks/{taskId}',
+        operationId: 'show',
+        summary: 'Display the specified resource.',
+        tags: ['Tasks'],
+//        security: [],
+        parameters: [
+            new OA\Parameter(
+                name: 'taskId',
+                description: 'Task uniqal ID',
+                in: 'path',
+                schema: new OA\Schema(type: 'integer'),
+                example: 1
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'successful operation',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            ref: '#/components/schemas/TaskResource',
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: '400',
+                description: 'Bad request. Validation or bussiness logic error.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items()
+                        ),
+                    ]
+                )
+            )
+        ]
+    )]
     public function show(int $id)
     {
         return new TaskResource(Task::findOrFail($id));
     }
 
+
     /**
-     * @OA\Patch(
-     *      path="/tasks/{taskId}",
-     *      operationId="update",
-     *      tags={"Tasks"},
-     *      summary="Update the specified resource in storage.",
-     *      security={{"passport": {}}},
-     *      @OA\Parameter(
-     *          description="Task ID",
-     *          in="path",
-     *          name="taskId",
-     *          example="1",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *      ),
-     *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/UpdateTaskRequest")
-     *      ),
-     *      @OA\Response(
-     *          response="200",
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Task")
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response="400",
-     *          description="Bad request. Validation or bussiness logic error.",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string"),
-     *              @OA\Property(property="data", type="array", items={}),
-     *          )
-     *      )
-     *  )
-     *
-     *
-     *
-     *
      * @param UpdateTaskRequest $request
      * @param int $id
      * @return TaskResource
      */
+    #[OA\Patch(
+        path: '/tasks/{taskId}',
+        operationId: 'update',
+        summary: 'Update the specified resource in storage.',
+//        security: [],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UpdateTaskRequest'
+            )
+        ),
+        tags: ['Tasks'],
+        parameters: [
+            new OA\Parameter(
+                name: 'taskId',
+                description: 'Task ID',
+                in: 'path',
+                schema: new OA\Schema(type: 'integer'),
+                example: 1,
+            )],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'successful operation',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            ref: '#/components/schemas/Task',
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: '400',
+                description: 'Bad request. Validation or bussiness logic error.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items()
+                        ),
+                    ]
+                )
+            )
+        ]
+    )]
     public function update(UpdateTaskRequest $request, int $id)
     {
         $task = $this->taskRepository->updateTask($request, $id);
@@ -230,37 +299,49 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
+
     /**
-     * @OA\Delete(
-     *      path="/tasks/{taskId}",
-     *      operationId="destroy",
-     *      tags={"Tasks"},
-     *      summary="Remove the specified resource from storage.",
-     *      security={{"passport": {}}},
-     *      @OA\Parameter(
-     *          description="Task ID",
-     *          in="path",
-     *          name="taskId",
-     *          example="1",
-     *          @OA\Schema(type="integer")
-     *      ),
-     *      @OA\Response(
-     *          response="204",
-     *          description="successful operation",
-     *      ),
-     *      @OA\Response(
-     *          response="400",
-     *          description="Bad request. Validation or bussiness logic error.",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string"),
-     *              @OA\Property(property="data", type="array", items={}),
-     *          )
-     *      )
-     *  )
-     *
      * @param  int  $id
      * @return Response
      */
+    #[OA\Delete(
+        path: '/tasks/{taskId}',
+        operationId: 'destroy',
+        summary: 'Remove the specified resource from storage.',
+//        security: [],
+        tags: ['Tasks'],
+        parameters: [
+            new OA\Parameter(
+                name: 'taskId',
+                description: 'Task ID',
+                in: 'path',
+                schema: new OA\Schema(type: 'integer'),
+                example: 1,
+            )],
+        responses: [
+            new OA\Response(
+                response: '204',
+                description: 'successful operation',
+            ),
+            new OA\Response(
+                response: '400',
+                description: 'Bad request. Validation or bussiness logic error.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items()
+                        ),
+                    ]
+                )
+            )
+        ]
+    )]
     public function destroy(int $id)
     {
         $this->taskRepository->deleteTask($id);

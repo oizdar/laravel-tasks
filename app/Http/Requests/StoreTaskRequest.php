@@ -5,16 +5,17 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\Schema(
- *     @OA\Xml(name="StoreTask"),
- *     @OA\Property(property="title", type="string",  example="Example task title"),
- *     @OA\Property(property="description", type="text",  example="Example task description", nullable=true),
- *     @OA\Property(property="due_date", type="string", format="date", example="2025-02-25"),
- * )
- */
+#[OA\Schema(
+    required: ['title'],
+    properties: [
+        new OA\Property(property: 'title', type: 'string', example: 'Example task title'),
+        new OA\Property(property: 'description', type: 'string', example: 'Example task title', nullable: true),
+        new OA\Property(property: 'due_date', type: 'string', format: 'date', example: '2025-02-25', nullable: true),
+    ],
+    xml: new OA\Xml(name: "StoreTask")
+)]
 class StoreTaskRequest extends FormRequest
 {
     /**

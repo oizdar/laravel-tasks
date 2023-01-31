@@ -6,23 +6,24 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-/**
- * @OA\Schema(
- *     @OA\Xml(name="Task"),
- *     @OA\Property(property="id", type="integer", readOnly="true", example="1"),
- *     @OA\Property(property="title", type="string",  example="Example task title"),
- *     @OA\Property(property="description", type="text",  example="Example task description", nullable=true),
- *     @OA\Property(property="due_date", type="string", format="date", example="2019-02-25"),
- *     @OA\Property(property="completed", type="boolean", example=false),
- *     @OA\Property(property="created_at", ref="#/components/schemas/BaseModel/properties/created_at"),
- *     @OA\Property(property="updated_at", ref="#/components/schemas/BaseModel/properties/updated_at"),
- *     @OA\Property(property="deleted_at", ref="#/components/schemas/BaseModel/properties/deleted_at")
- * )
- */
+#[OA\Schema(
+    required: ['title', 'completed'],
+    properties: [
+        new OA\Property(property: 'id', type: 'string', readOnly: true, example: 1),
+        new OA\Property(property: 'title', type: 'string', example: 'Example task title'),
+        new OA\Property(property: 'description', type: 'string', example: 'Example task description', nullable: true),
+        new OA\Property(property: 'due_date', type: 'string', format: 'date', example: '2025-02-25', nullable: true),
+        new OA\Property(property: 'completed', type: 'boolean', example: true, nullable: false),
+        new OA\Property(property: 'created_at', ref: '#/components/schemas/BaseModel/properties/created_at'),
+        new OA\Property(property: 'updated_at', ref: '#/components/schemas/BaseModel/properties/updated_at'),
+        new OA\Property(property: 'deleted_at', ref: '#/components/schemas/BaseModel/properties/deleted_at'),
+    ],
+    xml: new OA\Xml(name: "Task")
+)]
 class Task extends Model
 {
     use HasFactory;
