@@ -49,6 +49,12 @@ class TasksTest extends TestCase
         $responseBody = json_decode($response->getContent());
 
         $this->assertCount(25, $responseBody->data);
+        $this->assertObjectHasAttribute('data', $responseBody);
+        $this->assertObjectHasAttribute('id', $responseBody->data[0]);
+        $this->assertObjectHasAttribute('title', $responseBody->data[0]);
+        $this->assertObjectHasAttribute('due_date', $responseBody->data[0]);
+        $this->assertObjectHasAttribute('completed', $responseBody->data[0]);
+        $this->assertObjectNotHasAttribute('activities', $responseBody->data[0]);
 
         $response = $this->get('/api/tasks?page=2');
         $responseBody = json_decode($response->getContent());
@@ -66,8 +72,11 @@ class TasksTest extends TestCase
         $responseBody = json_decode($response->getContent());
 
         $this->assertObjectHasAttribute('data', $responseBody);
+        $this->assertObjectHasAttribute('id', $responseBody->data);
         $this->assertObjectHasAttribute('title', $responseBody->data);
         $this->assertObjectHasAttribute('due_date', $responseBody->data);
+        $this->assertObjectHasAttribute('completed', $responseBody->data);
+        $this->assertObjectHasAttribute('activities', $responseBody->data);
         $this->assertFalse($responseBody->data->completed);
     }
 

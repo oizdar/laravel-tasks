@@ -12,7 +12,6 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'integer', readOnly: true, example: 1),
         new OA\Property(property: 'title', type: 'string', example: 'Example task title'),
-        new OA\Property(property: 'description', type: 'string', example: 'Example task title', nullable: true),
         new OA\Property(property: 'due_date', type: 'string', format: 'date', example: '2025-02-25', nullable: true),
         new OA\Property(property: 'completed', type: 'boolean', example: true, nullable: false),
         new OA\Property(property: 'activities', type: 'integer', readOnly: true, example: 1),

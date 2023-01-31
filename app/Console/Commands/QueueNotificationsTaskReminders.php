@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 
 class QueueNotificationsTaskReminders extends Command
 {
-
     public function __construct(private TasksRepository $tasksRepository)
     {
         parent::__construct();
@@ -45,4 +44,3 @@ class QueueNotificationsTaskReminders extends Command
         return Command::SUCCESS;
     }
 }
-

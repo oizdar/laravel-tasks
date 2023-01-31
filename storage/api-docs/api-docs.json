@@ -206,11 +206,11 @@
                         }
                     }
                 },
-                "security": {
-                    "passport": {
-                        "scalar": ""
+                "security": [
+                    {
+                        "passport": "{}"
                     }
-                }
+                ]
             }
         },
         "/tasks/{taskId}": {
@@ -266,7 +266,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": "{}"
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -308,7 +313,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": "{}"
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -372,7 +382,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": "{}"
+                    }
+                ]
             }
         }
     },
@@ -476,11 +491,6 @@
                         "type": "string",
                         "example": "Example task title"
                     },
-                    "description": {
-                        "type": "string",
-                        "example": "Example task title",
-                        "nullable": true
-                    },
                     "due_date": {
                         "type": "string",
                         "format": "date",
@@ -518,11 +528,6 @@
                     "title": {
                         "type": "string",
                         "example": "Example task title"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "Example task title",
-                        "nullable": true
                     },
                     "due_date": {
                         "type": "string",
