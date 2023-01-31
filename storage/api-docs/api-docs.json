@@ -147,7 +147,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": "{}"
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -199,6 +204,11 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": {
+                    "passport": {
+                        "scalar": ""
                     }
                 }
             }

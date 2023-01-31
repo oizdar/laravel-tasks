@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -34,7 +33,6 @@ class TaskResourceForCollection extends JsonResource
             'title' => $this->title,
             'due_date' => $this->due_date,
             'completed' => $this->completed,
-            'activities' => $this->activitiesCount,
         ];
     }
 }

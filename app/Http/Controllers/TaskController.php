@@ -32,8 +32,8 @@ class TaskController extends Controller
         path: '/tasks',
         operationId: 'index',
         summary: 'Display a listing of the resource.',
+        security: [['passport' => '{}']],
         tags: ['Tasks'],
-//        security: [],
         parameters: [
             new OA\Parameter(
                 name: 'completed',
@@ -129,13 +129,13 @@ class TaskController extends Controller
         path: '/tasks',
         operationId: 'store',
         summary: 'Store a newly created resource in storage.',
+        security: [['passport' => '{}']],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 ref: '#/components/schemas/StoreTaskRequest'
             )
         ),
-//        security: [],
         tags: ['Tasks'],
         responses: [
             new OA\Response(
@@ -184,8 +184,8 @@ class TaskController extends Controller
         path: '/tasks/{taskId}',
         operationId: 'show',
         summary: 'Display the specified resource.',
+        security: [['passport' => '{}']],
         tags: ['Tasks'],
-//        security: [],
         parameters: [
             new OA\Parameter(
                 name: 'taskId',
@@ -243,7 +243,7 @@ class TaskController extends Controller
         path: '/tasks/{taskId}',
         operationId: 'update',
         summary: 'Update the specified resource in storage.',
-//        security: [],
+        security: [['passport' => '{}']],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -308,7 +308,7 @@ class TaskController extends Controller
         path: '/tasks/{taskId}',
         operationId: 'destroy',
         summary: 'Remove the specified resource from storage.',
-//        security: [],
+        security: [['passport' => '{}']],
         tags: ['Tasks'],
         parameters: [
             new OA\Parameter(
