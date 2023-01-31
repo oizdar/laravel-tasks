@@ -33,5 +33,12 @@ class TaskFactory extends Factory
         ]);
     }
 
+    public function withUser(User $user): TaskFactory
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_id' => $user->id
+        ]);
+    }
+
 
 }
