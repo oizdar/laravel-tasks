@@ -22,7 +22,6 @@ use OpenApi\Annotations as OA;
  */
 class TaskController extends Controller
 {
-
     public function __construct(private readonly TasksRepository $taskRepository)
     {
     }

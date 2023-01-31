@@ -34,7 +34,7 @@ class TasksRepository
         /** @var Task $task */
         $task = Task::findOrFail($taskId);
 
-        if($task->completed) {
+        if ($task->completed) {
             throw new HttpResponseException(response()->json([
                 'message'   => 'Cannot update completed task',
             ])->setStatusCode(400));
@@ -42,7 +42,7 @@ class TasksRepository
 
         $task->fill($taskRequest->validated())->save();
 
-        if($task->completed) {
+        if ($task->completed) {
             ProcessMailOnTaskCompleted::dispatch($task);
         }
 
@@ -54,7 +54,7 @@ class TasksRepository
         /** @var Task $task */
         $task = Task::findOrFail($taskId);
 
-        if($task->completed) {
+        if ($task->completed) {
             throw new HttpResponseException(response()->json([
                 'message'   => 'Cannot delete completed task',
             ])->setStatusCode(400));

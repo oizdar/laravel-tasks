@@ -25,7 +25,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class Task extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory;
+    use LogsActivity;
 
     public User $user;
     protected $fillable = [
@@ -68,7 +69,7 @@ class Task extends Model
      */
     public function scopeFilter(Builder $builder, array $filters = []): Builder
     {
-        if(!$filters) {
+        if (!$filters) {
             return $builder;
         }
 
@@ -77,15 +78,15 @@ class Task extends Model
                 $builder->where('completed', false);
                 break;
             case 'true':
-                 $builder->where('completed', true);
-                 break;
+                $builder->where('completed', true);
+                break;
         }
 
-        if($filters['due_date']['from'] ?? false) {
+        if ($filters['due_date']['from'] ?? false) {
             $builder->where('due_date', '>=', new \DateTime($filters['due_date']['from']));
         }
 
-        if($filters['due_date']['to'] ?? false) {
+        if ($filters['due_date']['to'] ?? false) {
             $builder->where('due_date', '<=', new \DateTime($filters['due_date']['to']));
         }
 
@@ -99,23 +100,22 @@ class Task extends Model
      */
     public function scopeSort(Builder $builder, array $sort = []): Builder
     {
-        if(!$sort) {
+        if (!$sort) {
             return $builder;
         }
 
-        if($sort['order_by']['completed'] ?? false) {
+        if ($sort['order_by']['completed'] ?? false) {
             $builder->orderBy('completed', $sort['order_by']['completed']);
         }
 
-        if($sort['order_by']['due_date'] ?? false) {
+        if ($sort['order_by']['due_date'] ?? false) {
             $builder->orderBy('due_date', $sort['order_by']['completed']);
         }
 
-        if($sort['order_by']['activities'] ?? false) {
-//TODO:            $builder->orderBy('activities', $sort['order_by']['activities']);
+        if ($sort['order_by']['activities'] ?? false) {
+            //TODO:            $builder->orderBy('activities', $sort['order_by']['activities']);
         }
 
         return $builder;
     }
-
 }

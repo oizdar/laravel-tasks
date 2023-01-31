@@ -39,6 +39,4 @@ class TaskFactory extends Factory
             'user_id' => $user->id
         ]);
     }
-
-
 }

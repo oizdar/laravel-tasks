@@ -41,7 +41,7 @@ class TaskReminder extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
                     ->subject(__('notification.task_reminder_subject'))
                     ->line(__('notification.task_reminder_line', ['title' => $this->task->title]));
     }
@@ -58,5 +58,4 @@ class TaskReminder extends Notification implements ShouldQueue
             //
         ];
     }
-
 }

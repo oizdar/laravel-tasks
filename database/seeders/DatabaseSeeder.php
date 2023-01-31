@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 'Test User',
-             'email' => 'test@example.com',
-             'password' => Hash::make(env('TEST_USER_PASSWORD'))
-         ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => Hash::make(env('TEST_USER_PASSWORD'))
+        ]);
         \App\Models\User::factory()->create([
             'name' => 'Test User2',
             'email' => 'test2@example.com',
@@ -34,6 +34,6 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make(env('TEST_USER_PASSWORD'))
         ]);
 
-         Task::factory(100)->create();
+        Task::factory(100)->create();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -11,4 +12,6 @@ use OpenApi\Annotations as OA;
 * @OA\Property(property="deleted_at", type="string", format="date-time", description="Soft delete timestamp", readOnly="true"),
 * )
 */
-abstract class BaseModel extends Model {}
+abstract class BaseModel extends Model
+{
+}

@@ -41,7 +41,7 @@ class TaskCompleted extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
                     ->subject(__('notification.task_completed_subject'))
                     ->line(__('notification.task_completed_line', ['title' => $this->task->title]));
     }
@@ -59,5 +59,4 @@ class TaskCompleted extends Notification implements ShouldQueue
             //
         ];
     }
-
 }
