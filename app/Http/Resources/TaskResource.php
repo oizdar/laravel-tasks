@@ -2,12 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Task;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
-use Spatie\Activitylog\Models\Activity;
 
 #[OA\Schema(
     required: ['id', 'title', 'completed'],
@@ -31,16 +29,11 @@ class TaskResource extends JsonResource
      */
     public function toArray($request)
     {
-        $activitiesCount = Activity::where('subject_type', '=', Task::class)
-            ->where('subject_id', '=', $this->id)
-            ->count();
-
         return [
             'id' => $this->id,
             'title' => $this->title,
             'due_date' => $this->due_date,
             'completed' => $this->completed,
-            'activities' => $activitiesCount,
         ];
     }
 }

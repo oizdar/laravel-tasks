@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use OpenApi\Attributes as OA;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 #[OA\Schema(
@@ -30,6 +31,7 @@ class Task extends Model
     use LogsActivity;
 
     public User $user;
+
     protected $fillable = [
         'title',
         'description',
@@ -45,6 +47,7 @@ class Task extends Model
         'due_date' => null,
         'completed' => false,
         'reminded' => false,
+        'activities' => 0,
     ];
 
 
@@ -54,6 +57,13 @@ class Task extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getActivitiesAttribute()
+    {
+        return Activity::where('subject_type', '=', Task::class)
+            ->where('subject_id', '=', $this->id)
+            ->count();
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -111,10 +121,6 @@ class Task extends Model
 
         if ($sort['order_by']['due_date'] ?? false) {
             $builder->orderBy('due_date', $sort['order_by']['completed']);
-        }
-
-        if ($sort['order_by']['activities'] ?? false) {
-            //TODO:            $builder->orderBy('activities', $sort['order_by']['activities']);
         }
 
         return $builder;
