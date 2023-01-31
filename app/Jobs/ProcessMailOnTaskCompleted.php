@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,6 +32,8 @@ class ProcessMailOnTaskCompleted implements ShouldQueue
      */
     public function handle()
     {
-        $this->task->user()->first()->notify(new \App\Notifications\TaskCompleted($this->task));
+        /** @var User $user */
+        $user = $this->task->user()->first();
+        $user->notify(new \App\Notifications\TaskCompleted($this->task));
     }
 }

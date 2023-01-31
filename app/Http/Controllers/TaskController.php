@@ -96,12 +96,14 @@ class TaskController extends Controller
      */
     public function index(GetTasksRequest $request)
     {
-        return new TaskCollection(Task::filter($request->validated())->sort($request->validated())->paginate(25));
+        return new TaskCollection(Task::filter($request->validated())
+            ->sort($request->validated())
+            ->paginate(25));
     }
 
     /**
      *  @OA\Post(
-     *      path="/tasks{?completed*}",
+     *      path="/tasks",
      *      operationId="store",
      *      tags={"Tasks"},
      *      summary="Store a newly created resource in storage.",
