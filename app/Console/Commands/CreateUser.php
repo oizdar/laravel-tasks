@@ -33,7 +33,7 @@ class CreateUser extends Command
         $name = $this->ask('What is your name?');
         $email = $this->ask('What is your email?');
         $password = $this->ask('What is your password?');
-        $tasksCount = (int) $this->ask('How many tasks should we Crate', 0);
+        $tasksCount = (int) $this->ask('How many tasks should we Crate', '0');
 
         $user = new User([
             'name' => $name,
