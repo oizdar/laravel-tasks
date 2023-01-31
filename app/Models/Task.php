@@ -47,7 +47,6 @@ class Task extends Model
         'due_date' => null,
         'completed' => false,
         'reminded' => false,
-        'activities' => 0,
     ];
 
 
@@ -59,7 +58,7 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getActivitiesAttribute()
+    public function getActivitiesAttribute(): int
     {
         return Activity::where('subject_type', '=', Task::class)
             ->where('subject_id', '=', $this->id)
