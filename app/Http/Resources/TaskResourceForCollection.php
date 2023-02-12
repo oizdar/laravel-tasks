@@ -32,6 +32,7 @@ class TaskResourceForCollection extends JsonResource
             'title' => $this->title,
             'due_date' => $this->due_date,
             'completed' => $this->completed,
+            'activities' => $this->activities
         ];
     }
 }
