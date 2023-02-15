@@ -22,6 +22,7 @@ class TaskController extends Controller
 {
     public function __construct(private readonly TasksRepository $taskRepository)
     {
+        $this->authorizeResource(Task::class);
     }
 
     /**
@@ -117,7 +118,7 @@ class TaskController extends Controller
     )]
     public function index(GetTasksRequest $request)
     {
-        return TaskResourceForCollection::collection(Task::filter($request->validated())
+        return TaskResourceForCollection::collection(Task::with(['activities'])->filter($request->validated())
             ->sort($request->validated())
             ->paginate(25));
     }
@@ -189,7 +190,7 @@ class TaskController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'taskId',
-                description: 'Task uniqal ID',
+                description: 'Task unique ID',
                 in: 'path',
                 schema: new OA\Schema(type: 'integer'),
                 example: 1
